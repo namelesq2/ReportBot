@@ -97,6 +97,6 @@ scheduler.add_job(send_scheduled_report, CronTrigger(hour=18, minute=30, timezon
 scheduler.start()
 
 # Запуск бота
-if name == "__main__":
+if __name__ == "__main__":
     print("✅ Бот запущен.")
     executor.start_polling(dp, skip_updates=True)
