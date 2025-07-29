@@ -10,10 +10,7 @@ import pytz
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 scheduler = AsyncIOScheduler()
-
 user_reports = {}
-
-# Валидация строки отчета
 def parse_report_line(line):
     match = re.match(r"^([А-Яа-яЁёA-Za-z\s\-]+) - (\d+)/(\d+)/(\d+)$", line.strip())
     if not match:
@@ -27,7 +24,6 @@ def parse_report_line(line):
     except ValueError:
         return None
 
-# Стартовое сообщение
 @dp.message_handler(commands=['start'])
 async def start_cmd(message: types.Message):
     await message.answer(
@@ -41,7 +37,6 @@ async def start_cmd(message: types.Message):
         parse_mode="Markdown"
     )
 
-# Обработка отчетов
 @dp.message_handler(lambda message: '-' in message.text and '/' in message.text)
 async def collect_report(message: types.Message):
     user_id = message.from_user.id
@@ -96,7 +91,6 @@ moscow_tz = pytz.timezone("Europe/Moscow")
 scheduler.add_job(send_scheduled_report, CronTrigger(hour=18, minute=30, timezone=moscow_tz))
 scheduler.start()
 
-# Запуск бота
 if __name__ == "__main__":
     print("✅ Бот запущен.")
     executor.start_polling(dp, skip_updates=True)
